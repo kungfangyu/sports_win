@@ -34,4 +34,19 @@ const InfoCardNormalLarge = styled(Card)(() => {
   };
 });
 
-export { InfoCardNormal, InfoCardNormalLarge };
+const InfoCardMain = styled(Card)(() => {
+    return {
+      width: "100%",
+      borderRadius: "16px",
+      padding: "12px",
+      boxShadow: "none",
+      backgroundColor: "rgba(237, 248, 250, 1)",
+      border: "1px solid rgba(90, 180, 197, 1)",
+      display: "flex",
+      flexDirection: "column",
+      gap: "8px",
+      boxSizing: "border-box",
+    };
+  });
+
+export { InfoCardNormal, InfoCardNormalLarge, InfoCardMain };

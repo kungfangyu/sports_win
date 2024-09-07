@@ -10,6 +10,8 @@ import HomePage from "./page/HomePage";
 import VenueDetail from "./page/VenueDetail";
 import VenueList from "./page/VenueList";
 import VenueSubmit from "./page/VenueSubmit";
+import VenueSubmitDecline from "./page/VenueJoin";
+import VenueJoin from "./page/VenueJoin";
 
 const App = () => {
   return (
@@ -20,6 +22,7 @@ const App = () => {
 
         <Route path="/:sport/detail/:id" element={<VenueDetail />} />
         <Route path="/:sport/detail/:id/submit" element={<VenueSubmit />} />
+        <Route path="/:sport/detail/:id/join" element={<VenueJoin />} />
       </Routes>
     </BrowserRouter>
   );
