@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 13:16:07
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 01:45:17
+ * @LastEditTime: 2024-09-08 02:36:03
  * @FilePath: /sports_win/src/App.js
  */
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -18,7 +18,7 @@ const App = () => {
         <Route exact path="/" element={<HomePage />} />
         <Route exact path="/:sport" element={<VenueList />} />
 
-        <Route path="/:sport/detail/:id" element={<VenueDetail />} />
+        <Route path="/:sport/:id" element={<VenueDetail />} />
         <Route path="/:sport/detail/:id/submit" element={<VenueSubmit />} />
       </Routes>
     </BrowserRouter>
