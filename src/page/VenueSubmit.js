@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-08 01:43:21
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 05:43:42
+ * @LastEditTime: 2024-09-08 07:52:15
  * @FilePath: /sports_win/src/page/VenueSubmit.js
  */
 import { ThemeProvider } from "@mui/material/styles";
@@ -39,7 +39,7 @@ const ColoredCircularProgress = styled(CircularProgress)(({ theme }) => ({
 }));
 
 const VenueSubmit = () => {
-  const bookNumber = 4;
+  const bookNumber = 0;
   const { sport, id } = useParams();
   const navigate = useNavigate();
   const [venueInfo, setVenueInfo] = useState(null);
@@ -94,7 +94,7 @@ const VenueSubmit = () => {
     const bookingData = {
       userId: "1",
       courtId: 16,
-      date: "2024/09/08",
+      date: "2024/09/09",
       period: "09:00-10:00",
     };
     setIsLoading(true);
@@ -106,11 +106,10 @@ const VenueSubmit = () => {
       setOpenSnackbar(true);
       setTimeout(() => {
         setOpenSnackbar(false);
-        navigate("/");
+        navigate(`/${sport}`);
       }, 2000); // 2秒后跳转
     } catch (error) {
       console.error("fetchVenueInfo failed:", error);
-      // 处理错误,可以显示错误消息
     } finally {
       setIsLoading(false);
     }
@@ -195,7 +194,7 @@ const VenueSubmit = () => {
                 color: "text.second",
               }}
             >
-              2024/09/14
+              2024/09/09
             </Typography>
           </InfoCardMain>
           <InfoCardMain>
@@ -213,7 +212,7 @@ const VenueSubmit = () => {
                 color: "text.second",
               }}
             >
-              10:00-11:00
+              09:00-10:00
             </Typography>
           </InfoCardMain>
         </Box>

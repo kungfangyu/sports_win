@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 22:51:09
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 07:23:20
+ * @LastEditTime: 2024-09-08 07:37:36
  * @FilePath: /sports_win/src/page/VenueDetail.js
  */
 import {
@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { styled } from "@mui/material/styles";
 import { getVenueInfo } from "../api/getVenueInfo";
@@ -34,12 +34,8 @@ const ColoredCircularProgress = styled(CircularProgress)(({ theme }) => ({
 const VenueDetail = () => {
   const { sport, id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [venueInfo, setVenueInfo] = useState(null);
-
-  const amount = location.state?.amount;
-  console.log(amount);
 
   useEffect(() => {
     const fetchVenueInfo = async () => {
