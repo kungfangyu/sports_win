@@ -2,27 +2,51 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-08 01:43:21
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 04:09:09
+ * @LastEditTime: 2024-09-08 05:43:42
  * @FilePath: /sports_win/src/page/VenueSubmit.js
  */
 import { ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getVenueInfo } from "../api/getVenueInfo";
 import { Wrapper } from "../components/utility/LayoutStyle";
 
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import {
   Box,
   Button,
   CardMedia,
   Checkbox,
+  CircularProgress,
   Divider,
-  Link,
+  Snackbar,
   Typography,
 } from "@mui/material";
-import { InfoCardMain, InfoCardNormalLarge } from "../components/card/InfoCard";
+
+import { styled } from "@mui/material/styles";
+import { useNavigate, useParams } from "react-router-dom";
+import { postBooking } from "../api/postBooking";
+import {
+  InfoCardMain,
+  InfoCardNormalLarge,
+  InfoCardSecondary,
+} from "../components/card/InfoCard";
+import BasicInfo from "../components/venueInfo/BasicInfo";
 import { images } from "../data/data";
 import { theme } from "../style/theme";
 
+const ColoredCircularProgress = styled(CircularProgress)(({ theme }) => ({
+  color: theme.palette.primary.light,
+}));
+
 const VenueSubmit = () => {
+  const bookNumber = 4;
+  const { sport, id } = useParams();
+  const navigate = useNavigate();
+  const [venueInfo, setVenueInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
@@ -48,90 +72,69 @@ const VenueSubmit = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchVenueInfo = async () => {
+      try {
+        const { data } = await getVenueInfo(id);
+        const { name, address, manager_phone, price } = data;
+        setVenueInfo({
+          name,
+          address,
+          manager_phone,
+          price,
+        });
+      } catch (error) {
+        console.error("fetchVenueInfo failed:", error);
+      }
+    };
+    fetchVenueInfo();
+  }, [id]);
+
+  const handleBooking = async () => {
+    const bookingData = {
+      userId: "1",
+      courtId: 16,
+      date: "2024/09/08",
+      period: "09:00-10:00",
+    };
+    setIsLoading(true);
+
+    try {
+      const response = await postBooking(bookingData);
+      console.log("success:", response.data);
+      setIsLoading(true);
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        setOpenSnackbar(false);
+        navigate("/");
+      }, 2000); // 2秒后跳转
+    } catch (error) {
+      console.error("fetchVenueInfo failed:", error);
+      // 处理错误,可以显示错误消息
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (!venueInfo) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <ColoredCircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Wrapper sx={{ backgroundColor: "#fff" }}>
-        <Box my={2}>
-          <Typography
-            variant="h2SemiBold"
-            sx={{
-              color: "text.primary",
-            }}
-          >
-            東吳大學體育館
-          </Typography>
-        </Box>
-        <Link
-          component="a"
-          variant="body"
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            "臺北市中正區貴陽街一段56號"
-          )}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{
-            color: "text.secondary",
-            marginLeft: "8px",
-            textDecoration: "underline",
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "8px",
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <img
-            src="/icons/icon_location.svg"
-            alt="位置"
-            style={{ marginRight: "8px" }}
-          />
-          臺北市中正區貴陽街一段56號
-        </Link>
-        <Link
-          component="a"
-          variant="body"
-          href={`tel:${encodeURIComponent("(02)28819471#5606")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{
-            color: "text.secondary",
-            marginLeft: "8px",
-            textDecoration: "underline",
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "8px",
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <img
-            src="/icons/icon_phone.svg"
-            alt="電話"
-            style={{ marginRight: "8px" }}
-          />
-          (02)28819471#5606
-        </Link>
-        <Link
-          component="a"
-          variant="body"
-          href={"http://www.scu.edu.tw/physical/"}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{
-            color: "text.secondary",
-            marginLeft: "8px",
-            textDecoration: "underline",
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "12px",
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <img
-            src="/icons/icon_web.svg"
-            alt="官網"
-            style={{ marginRight: "8px" }}
-          />
-          http://www.scu.edu.tw/physical/
-        </Link>
+        <BasicInfo venueInfo={venueInfo} />
         <Divider />
         <Box py={2}>
           <InfoCardNormalLarge>
@@ -214,46 +217,90 @@ const VenueSubmit = () => {
             </Typography>
           </InfoCardMain>
         </Box>
-        <InfoCardMain sx={{ margin: "16px 0px" }}>
-          <Box
-            sx={{
-              display: "flex",
-              Width: "100%",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography
-              variant="h3SemiBold"
+        {bookNumber <= 1 ? (
+          <InfoCardMain sx={{ margin: "16px 0px" }}>
+            <Box
               sx={{
-                color: "primary.main",
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              我要招募球友
-            </Typography>
-            <Checkbox />
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <img
-              src="/icons/icon_info.svg"
-              alt="配置"
-              style={{ marginRight: "8px" }}
-            />
-            <Typography
-              variant="body"
+              <Typography
+                variant="h3SemiBold"
+                sx={{
+                  color: "primary.main",
+                }}
+              >
+                我要招募球友
+              </Typography>
+              <Checkbox />
+            </Box>
+            <Box
               sx={{
-                color: "text.third",
+                display: "flex",
+                alignItems: "center",
               }}
             >
-              還在煩惱找不到球友嗎？有球必IN幫你快速媒合，輕鬆組隊打球！
-            </Typography>
-          </Box>
-        </InfoCardMain>
+              <img
+                src="/icons/icon_info.svg"
+                alt="配置"
+                style={{ marginRight: "8px" }}
+              />
+              <Typography
+                variant="body"
+                sx={{
+                  color: "text.third",
+                }}
+              >
+                還在煩惱找不到球友嗎？有球必IN幫你快速媒合，輕鬆組隊打球！
+              </Typography>
+            </Box>
+          </InfoCardMain>
+        ) : (
+          <InfoCardSecondary sx={{ margin: "16px 0px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="h3SemiBold"
+                sx={{
+                  color: "secondary.main",
+                }}
+              >
+                球友募集中
+              </Typography>
+              <Checkbox />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src="/icons/icon_info.svg"
+                alt="配置"
+                style={{ marginRight: "8px" }}
+              />
+              <Typography
+                variant="body"
+                sx={{
+                  color: "text.third",
+                }}
+              >
+                還在煩惱找不到球友嗎？名額有限，趕快報團打球吧！
+              </Typography>
+            </Box>
+          </InfoCardSecondary>
+        )}
+
         <Divider />
         <Box
           sx={{
@@ -296,18 +343,40 @@ const VenueSubmit = () => {
             variant="contained"
             fullWidth
             sx={{
+              backgroundColor:
+                bookNumber >= 1 ? "secondary.main" : "primary.main",
               color: "white !important",
               borderRadius: "8px",
               padding: "12px",
               boxShadow: "none",
             }}
             onClick={() => {
-              console.log();
+              handleBooking();
             }}
           >
-            預定場地
+            {bookNumber >= 1 ? "我要報團" : "預定場地"}
           </Button>
         </Box>
+
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={openSnackbar}
+          autoHideDuration={2000}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "success.main",
+              color: "white",
+              padding: 2,
+              borderRadius: 1,
+            }}
+          >
+            <CheckCircleOutlineIcon sx={{ mr: 1 }} />
+            預定成功!
+          </Box>
+        </Snackbar>
       </Wrapper>
     </ThemeProvider>
   );

@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-05 08:48:40
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 01:23:54
+ * @LastEditTime: 2024-09-08 07:21:06
  * @FilePath: /sports_win/src/components/venueList/VenueCard.js
  */
 
@@ -20,14 +20,19 @@ import BaseCard from "../card/BaseCardStyle";
 import { BaseChips } from "../utility/ChipsStyle";
 
 const VenueCard = ({ info, isFree }) => {
-  const { id, name, image, address, reserve_status } = info;
+  const { courtId, name, address, reserveStatus, amount } = info;
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
+
+  const handleClick = () => {
+    navigate(`${location.pathname}/${courtId}`, {
+      state: { amount: amount },
+    });
+  };
 
   return (
     <BaseCard>
-      <CardActionArea onClick={() => navigate(`${location.pathname}/${id}`)}>
+      <CardActionArea onClick={handleClick}>
         <Box
           sx={{
             borderRadius: "8px",
@@ -56,7 +61,7 @@ const VenueCard = ({ info, isFree }) => {
             <Typography gutterBottom variant="h3SemiBold" component="div">
               {name}
             </Typography>
-            {!isFree && (
+            {!isFree && reserveStatus ? (
               <BaseChips
                 sx={{
                   marginLeft: "8px",
@@ -70,6 +75,23 @@ const VenueCard = ({ info, isFree }) => {
                       sx={{ marginRight: "4px" }}
                     />
                     尚有空位
+                  </Box>
+                }
+              />
+            ) : (
+              <BaseChips
+                sx={{
+                  marginLeft: "8px",
+                  color: "error.main",
+                  fontWeight: "800",
+                }}
+                label={
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <FiberManualRecordIcon
+                      fontSize="10px"
+                      sx={{ marginRight: "4px" }}
+                    />
+                    不開放預約
                   </Box>
                 }
               />

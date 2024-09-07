@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 16:27:55
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 01:41:49
+ * @LastEditTime: 2024-09-08 07:16:49
  * @FilePath: /sports_win/src/page/VenueList.js
  */
 import {
@@ -22,27 +22,25 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getVenueList } from "../api/getVenueList";
 import ColorButton from "../components/button/ColorButton";
 import { Wrapper } from "../components/utility/LayoutStyle";
-import VenueCard from "../components/venueList/VenueCard";
-import { venueListData } from "../data/fakeData";
-import { theme } from "../style/theme";
-
 import { BaseSelect } from "../components/utility/SelectStyle";
+import VenueCard from "../components/venueList/VenueCard";
 import { taipeiDistricts, timeSlots } from "../data/data";
-
+import { theme } from "../style/theme";
 const VenueList = () => {
   const { sport } = useParams();
 
   const [value, setValue] = useState(1);
+  const [searchTrigger, setSearchTrigger] = useState(0);
+
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedSiteType, setSelectedSiteType] = useState("");
-  const [dateValue, setDateValue] = useState(dayjs());
+  const [selectedTime, setSelectedTime] = useState("");
+  const [dateValue, setDateValue] = useState(dayjs().format("YYYY/MM/DD"));
 
-  const handleChange = (e, newValue) => {
-    setValue(newValue);
-  };
+  const [venueList, setVenueList] = useState([]);
 
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
@@ -52,21 +50,63 @@ const VenueList = () => {
     setSelectedDistrict(event.target.value);
   };
 
-  const handleSiteTypeChange = (event) => {
-    setSelectedSiteType(event.target.value);
+  const handleTimeChange = (event) => {
+    setSelectedTime(event.target.value);
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleSearch = () => {
+    fetchVenueList();
+    setSearchTrigger((prev) => prev + 1);
+  };
+
+  const fetchVenueList = async () => {
+    try {
+      const params = {
+        category: sport,
+        pay: value,
+        district: selectedDistrict,
+      };
+
+      if (value !== 0) {
+        params.date = dateValue;
+        params.period = selectedTime;
+      }
+      const response = await getVenueList(params);
+      setVenueList(response.data);
+    } catch (error) {
+      console.error("Fail:", error);
+    }
   };
 
   useEffect(() => {
-    if (sport === "basketball") {
-      // 加载篮球场地数据
-    } else if (sport === "badminton") {
-      // 加载羽毛球场地数据
-    } else if (sport === "tabletennis") {
-      // 加载乒乓球场地数据
-    } else if (sport === "volleyball") {
-      // 加载排球场地数据
-    }
-  });
+    fetchVenueList();
+  }, []);
+
+  // useEffect(() => {
+  //   const fetchVenueList = async () => {
+  //     try {
+  //       const params = {
+  //         category: sport,
+  //         pay: value,
+  //         district: selectedDistrict,
+  //         date: dateValue,
+  //         period: selectedTime,
+  //       };
+
+  //       const response = await getVenueList(params);
+  //       console.log(response.data);
+  //       setVenueList(response.data);
+  //     } catch (error) {
+  //       console.error("Fail:", error);
+  //     }
+  //   };
+
+  //   fetchVenueList();
+  // }, [sport, value, selectedDistrict, dateValue, selectedTime, searchTrigger]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -75,7 +115,7 @@ const VenueList = () => {
           <Box sx={{ width: "100%" }}>
             <Tabs
               value={value}
-              onChange={handleChange}
+              onChange={handleTabChange}
               textColor="primary.main"
               indicatorColor="primary.main"
               sx={{
@@ -109,10 +149,11 @@ const VenueList = () => {
                   labelId="district-select-label"
                   id="district-select"
                   value={selectedDistrict}
+                  defaultValue={"All"}
                   label="選擇行政區"
                   onChange={handleDistrictChange}
                 >
-                  <MenuItem value="全部">全部</MenuItem>
+                  <MenuItem value="All">全部</MenuItem>
                   {taipeiDistricts.map((district) => (
                     <MenuItem key={district} value={district}>
                       {district}
@@ -125,9 +166,13 @@ const VenueList = () => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="日期"
-                      value={dateValue}
+                      value={dayjs(dateValue, "YYYY/MM/DD")}
                       onChange={(newValue) => {
-                        setDateValue(newValue);
+                        const formattedDate = newValue
+                          ? newValue.format("YYYY/MM/DD")
+                          : "";
+                        console.log(formattedDate);
+                        setDateValue(formattedDate);
                       }}
                       format="YYYY/MM/DD"
                       renderInput={(params) => (
@@ -151,21 +196,28 @@ const VenueList = () => {
                     <BaseSelect
                       labelId="site-type-select-label"
                       id="site-type-select"
-                      value={selectedSiteType}
+                      value={selectedTime}
+                      defaultValue={"08:00-09:00"}
                       label="選擇時間"
-                      onChange={handleSiteTypeChange}
+                      onChange={handleTimeChange}
                     >
-                      {timeSlots.map((time) => {
-                        return <MenuItem value={time}>{time}</MenuItem>;
+                      {timeSlots.map((time, index) => {
+                        return (
+                          <MenuItem key={index} value={time}>
+                            {time}
+                          </MenuItem>
+                        );
                       })}
                     </BaseSelect>
                   </FormControl>
                 </Grid>
               </Grid>
             </Box>
-            <ColorButton mt={2}>查詢</ColorButton>
+            <ColorButton mt={2} onClick={handleSearch}>
+              查詢
+            </ColorButton>
             <Box>
-              {venueListData.map((item) => {
+              {venueList.map((item) => {
                 return <VenueCard key={item.id} info={item} isFree={false} />;
               })}
             </Box>
@@ -179,10 +231,11 @@ const VenueList = () => {
                   labelId="district-select-label"
                   id="district-select"
                   value={selectedDistrict}
+                  defaultValue={"All"}
                   label="選擇行政區"
                   onChange={handleDistrictChange}
                 >
-                  <MenuItem value="全部">全部</MenuItem>
+                  <MenuItem value="All">全部</MenuItem>
                   {taipeiDistricts.map((district) => (
                     <MenuItem key={district} value={district}>
                       {district}
@@ -190,9 +243,11 @@ const VenueList = () => {
                   ))}
                 </BaseSelect>
               </FormControl>
-              <ColorButton mt={2}>查詢</ColorButton>
+              <ColorButton mt={2} onClick={handleSearch}>
+                查詢
+              </ColorButton>
               <Box>
-                {venueListData.map((item) => {
+                {venueList.map((item) => {
                   return <VenueCard key={item.id} info={item} isFree={true} />;
                 })}
               </Box>
