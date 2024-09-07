@@ -2,19 +2,19 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 22:51:09
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 03:07:04
+ * @LastEditTime: 2024-09-08 04:02:11
  * @FilePath: /sports_win/src/page/VenueDetail.js
  */
 import {
   Box,
+  Button,
   CircularProgress,
   Divider,
-  Link,
   Typography,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { styled } from "@mui/material/styles";
 import { getVenueInfo } from "../api/getVenueInfo";
@@ -24,6 +24,7 @@ import {
 } from "../components/card/InfoCard";
 import ToggleCard from "../components/card/ToggleCard";
 import { Wrapper } from "../components/utility/LayoutStyle";
+import BasicInfo from "../components/venueInfo/BasicInfo";
 import { theme } from "../style/theme";
 
 const ColoredCircularProgress = styled(CircularProgress)(({ theme }) => ({
@@ -31,14 +32,14 @@ const ColoredCircularProgress = styled(CircularProgress)(({ theme }) => ({
 }));
 
 const VenueDetail = () => {
-  const { id } = useParams();
+  const { sport, id } = useParams();
+  const navigate = useNavigate();
   const [venueInfo, setVenueInfo] = useState(null);
 
   useEffect(() => {
     const fetchVenueInfo = async () => {
       try {
         const { data } = await getVenueInfo(id);
-        console.log(data);
         const {
           name,
           address,
@@ -90,11 +91,7 @@ const VenueDetail = () => {
   }
 
   const {
-    name,
-    address,
     availability_status,
-    official_website,
-    manager_phone,
     opening_days,
     venue_description,
     affiliated_property,
@@ -106,87 +103,7 @@ const VenueDetail = () => {
   return (
     <ThemeProvider theme={theme}>
       <Wrapper sx={{ backgroundColor: "#fff" }}>
-        <Box my={2}>
-          <Typography
-            variant="h2SemiBold"
-            sx={{
-              color: "text.primary",
-            }}
-          >
-            {name}
-          </Typography>
-        </Box>
-        <Link
-          component="a"
-          variant="body"
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            `${address}`
-          )}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{
-            color: "text.secondary",
-            marginLeft: "8px",
-            textDecoration: "underline",
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "8px",
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <img
-            src="/icons/icon_location.svg"
-            alt="位置"
-            style={{ marginRight: "8px" }}
-          />
-          {address}
-        </Link>
-        <Link
-          component="a"
-          variant="body"
-          href={`tel:${encodeURIComponent("(02)28819471#5606")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{
-            color: "text.secondary",
-            marginLeft: "8px",
-            textDecoration: "underline",
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "8px",
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <img
-            src="/icons/icon_phone.svg"
-            alt="電話"
-            style={{ marginRight: "8px" }}
-          />
-          {manager_phone}
-        </Link>
-        <Link
-          component="a"
-          variant="body"
-          href={"http://www.scu.edu.tw/physical/"}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{
-            color: "text.secondary",
-            marginLeft: "8px",
-            textDecoration: "underline",
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "12px",
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <img
-            src="/icons/icon_web.svg"
-            alt="官網"
-            style={{ marginRight: "8px" }}
-          />
-          {official_website}
-        </Link>
+        <BasicInfo venueInfo={venueInfo} />
         <Divider />
         <Box
           py={2}
@@ -289,6 +206,34 @@ const VenueDetail = () => {
           content={venue_description}
           subcontent={affiliated_property}
         />
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            padding: 2,
+            backgroundColor: "background.paper",
+            boxShadow: "0px 0px 6px 0px rgba(0, 0, 0, 0.1)",
+            borderRadius: "10px",
+          }}
+        >
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              color: "white !important",
+              borderRadius: "8px",
+              padding: "12px",
+              boxShadow: "none",
+            }}
+            onClick={() => {
+              navigate(`/${sport}/${id}/submit`);
+            }}
+          >
+            預定場地
+          </Button>
+        </Box>
       </Wrapper>
     </ThemeProvider>
   );

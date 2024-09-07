@@ -2,28 +2,52 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-08 01:43:21
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 01:46:48
+ * @LastEditTime: 2024-09-08 04:09:09
  * @FilePath: /sports_win/src/page/VenueSubmit.js
  */
 import { ThemeProvider } from "@mui/material/styles";
+import { useState } from "react";
 import { Wrapper } from "../components/utility/LayoutStyle";
 
-import { theme } from "../style/theme";
-import {
-  InfoCardNormal,
-  InfoCardNormalLarge,
-  InfoCardMain,
-} from "../components/card/InfoCard";
 import {
   Box,
+  Button,
+  CardMedia,
+  Checkbox,
   Divider,
   Link,
   Typography,
-  CardMedia,
-  Checkbox,
 } from "@mui/material";
+import { InfoCardMain, InfoCardNormalLarge } from "../components/card/InfoCard";
+import { images } from "../data/data";
+import { theme } from "../style/theme";
 
 const VenueSubmit = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart - touchEnd > 75) {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex < images.length - 1 ? prevIndex + 1 : prevIndex
+      );
+    }
+    if (touchEnd - touchStart > 75) {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : prevIndex
+      );
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Wrapper sx={{ backgroundColor: "#fff" }}>
@@ -139,8 +163,11 @@ const VenueSubmit = () => {
               paddingTop: "16px",
             }}
             component="img"
-            image="/images/studentCard.jpg"
+            image={images[currentImageIndex]}
             alt="card"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           />
         </Box>
         <Box
@@ -229,30 +256,58 @@ const VenueSubmit = () => {
         </InfoCardMain>
         <Divider />
         <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginTop:'16px',
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: "16px",
           }}
+        >
+          <Typography
+            variant="h3"
+            sx={{
+              color: "text.secondary",
+            }}
           >
-            <Typography
-              variant="h3"
-              sx={{
-                color: "text.secondary",
-              }}
-            >
-              場地金額
-            </Typography>
-            <Typography
-              variant="h3SemiBold"
-              sx={{
-                color: "primary.main",
-              }}
-            >
-              500元
-            </Typography>
-          </Box>
+            場地金額
+          </Typography>
+          <Typography
+            variant="h3SemiBold"
+            sx={{
+              color: "primary.main",
+            }}
+          >
+            500元
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            padding: 2,
+            backgroundColor: "background.paper",
+            boxShadow: "0px 0px 6px 0px rgba(0, 0, 0, 0.1)",
+            borderRadius: "10px",
+          }}
+        >
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              color: "white !important",
+              borderRadius: "8px",
+              padding: "12px",
+              boxShadow: "none",
+            }}
+            onClick={() => {
+              console.log();
+            }}
+          >
+            預定場地
+          </Button>
+        </Box>
       </Wrapper>
     </ThemeProvider>
   );

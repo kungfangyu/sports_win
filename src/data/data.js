@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-08 01:27:47
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 01:28:15
+ * @LastEditTime: 2024-09-08 04:07:31
  * @FilePath: /sports_win/src/data/data.js
  */
 export const timeSlots = [
@@ -34,3 +34,5 @@ export const taipeiDistricts = [
   "南港區",
   "文山區",
 ];
+
+export const images = ["/images/studentCard.jpg", "/images/normalCard.jpg"];
