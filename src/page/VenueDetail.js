@@ -2,23 +2,26 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 22:51:09
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-07 23:00:55
+ * @LastEditTime: 2024-09-08 02:01:47
  * @FilePath: /sports_win/src/page/VenueDetail.js
  */
-import { Grid, Typography, Box, Link, Divider, Stack } from "@mui/material";
+import { Box, Divider, Link, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 
+import {
+  InfoCardNormal,
+  InfoCardNormalLarge,
+} from "../components/card/InfoCard";
+import ToggleCard from "../components/card/ToggleCard";
 import { Wrapper } from "../components/utility/LayoutStyle";
 import { theme } from "../style/theme";
-import {InfoCardNormal, InfoCardNormalLarge} from "../components/card/InfoCard";
-import ToggleCard from "../components/card/ToggleCard";
 
 const VenueDetail = () => {
-
   const title = "場館介紹";
   const content = "本場館興建於民國91年，可進行籃球、排球、羽球活動。";
   const subtitle = "場館隸屬機關屬性";
-  const subcontent = "單一功能型運動場館（非前三項運動場館型態，且運動場館僅含一項運動設施）";
+  const subcontent =
+    "單一功能型運動場館（非前三項運動場館型態，且運動場館僅含一項運動設施）";
 
   return (
     <ThemeProvider theme={theme}>
@@ -200,7 +203,12 @@ const VenueDetail = () => {
             </Typography>
           </InfoCardNormalLarge>
         </Box>
-        <ToggleCard title={title} subtitle={subtitle} content={content} subcontent={subcontent}/>
+        <ToggleCard
+          title={title}
+          subtitle={subtitle}
+          content={content}
+          subcontent={subcontent}
+        />
       </Wrapper>
     </ThemeProvider>
   );
