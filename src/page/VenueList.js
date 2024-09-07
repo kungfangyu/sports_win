@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 16:27:55
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-07 22:48:26
+ * @LastEditTime: 2024-09-08 01:31:22
  * @FilePath: /sports_win/src/page/VenueList.js
  */
 import dayjs from "dayjs";
@@ -13,7 +13,6 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
@@ -29,23 +28,11 @@ import VenueCard from "../components/venueList/VenueCard";
 import { venueListData } from "../data/fakeData";
 import { theme } from "../style/theme";
 
-const timeSlots = [
-  "09:00-10:00",
-  "10:00-11:00",
-  "11:00-12:00",
-  "12:00-13:00",
-  "13:00-14:00",
-  "14:00-15:00",
-  "15:00-16:00",
-  "16:00-17:00",
-  "17:00-18:00",
-  "18:00-19:00",
-  "19:00-20:00",
-  "20:00-21:00",
-];
+import { BaseSelect } from "../components/utility/SelectStyle";
+import { taipeiDistricts, timeSlots } from "../data/data";
 
 const VenueList = () => {
-  const [value, setValue] = useState("one");
+  const [value, setValue] = useState(1);
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedSiteType, setSelectedSiteType] = useState("");
@@ -94,85 +81,110 @@ const VenueList = () => {
                 },
               }}
             >
-              <Tab value="one" label="付費場地" />
-              <Tab value="two" label="免費場地" />
+              <Tab value={1} label="付費場地" />
+              <Tab value={0} label="免費場地" />
             </Tabs>
           </Box>
-          <Box mt={4}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="district-select-label">選擇行政區</InputLabel>
-              <Select
-                labelId="district-select-label"
-                id="district-select"
-                value={selectedDistrict}
-                label="選擇行政區"
-                onChange={handleDistrictChange}
-                sx={{
-                  borderRadius: "10px",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderRadius: "10px",
-                  },
-                }}
-              >
-                <MenuItem value="全部">全部</MenuItem>
-                <MenuItem value="大安區">大安區</MenuItem>
-                <MenuItem value="文山區">文山區</MenuItem>
-              </Select>
-            </FormControl>
-            <Grid container spacing={2} mt={1}>
-              <Grid item xs={6}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="日期"
-                    value={dateValue}
-                    onChange={(newValue) => {
-                      setDateValue(newValue);
-                    }}
-                    format="YYYY/MM/DD"
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        sx={{
-                          "& .MuiInputBase-root": {
-                            borderRadius: "10px",
-                          },
-                        }}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-              </Grid>
-              <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="site-type-select-label">選擇時間</InputLabel>
-                  <Select
-                    labelId="site-type-select-label"
-                    id="site-type-select"
-                    value={selectedSiteType}
-                    label="選擇時間"
-                    onChange={handleSiteTypeChange}
-                    sx={{
-                      borderRadius: "10px",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderRadius: "10px",
-                      },
-                    }}
-                  >
-                    {timeSlots.map((time) => {
-                      return <MenuItem value={time}>{time}</MenuItem>;
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-          </Box>
-          <ColorButton mt={2}>查詢</ColorButton>
         </Box>
-        <Box>
-          {venueListData.map((item) => {
-            return <VenueCard key={item.id} info={item} />;
-          })}
-        </Box>
+        {value === 1 ? (
+          <>
+            <Box mt={4}>
+              <FormControl fullWidth>
+                <InputLabel id="district-select-label">選擇行政區</InputLabel>
+                <BaseSelect
+                  labelId="district-select-label"
+                  id="district-select"
+                  value={selectedDistrict}
+                  label="選擇行政區"
+                  onChange={handleDistrictChange}
+                >
+                  <MenuItem value="全部">全部</MenuItem>
+                  {taipeiDistricts.map((district) => (
+                    <MenuItem key={district} value={district}>
+                      {district}
+                    </MenuItem>
+                  ))}
+                </BaseSelect>
+              </FormControl>
+              <Grid container spacing={2} mt={1}>
+                <Grid item xs={6}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="日期"
+                      value={dateValue}
+                      onChange={(newValue) => {
+                        setDateValue(newValue);
+                      }}
+                      format="YYYY/MM/DD"
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              borderRadius: "10px",
+                            },
+                          }}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id="site-type-select-label">
+                      選擇時間
+                    </InputLabel>
+                    <BaseSelect
+                      labelId="site-type-select-label"
+                      id="site-type-select"
+                      value={selectedSiteType}
+                      label="選擇時間"
+                      onChange={handleSiteTypeChange}
+                    >
+                      {timeSlots.map((time) => {
+                        return <MenuItem value={time}>{time}</MenuItem>;
+                      })}
+                    </BaseSelect>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Box>
+            <ColorButton mt={2}>查詢</ColorButton>
+            <Box>
+              {venueListData.map((item) => {
+                return <VenueCard key={item.id} info={item} isFree={false} />;
+              })}
+            </Box>
+          </>
+        ) : (
+          <>
+            <Box mt={4}>
+              <FormControl fullWidth>
+                <InputLabel id="district-select-label">選擇行政區</InputLabel>
+                <BaseSelect
+                  labelId="district-select-label"
+                  id="district-select"
+                  value={selectedDistrict}
+                  label="選擇行政區"
+                  onChange={handleDistrictChange}
+                >
+                  <MenuItem value="全部">全部</MenuItem>
+                  {taipeiDistricts.map((district) => (
+                    <MenuItem key={district} value={district}>
+                      {district}
+                    </MenuItem>
+                  ))}
+                </BaseSelect>
+              </FormControl>
+              <ColorButton mt={2}>查詢</ColorButton>
+              <Box>
+                {venueListData.map((item) => {
+                  return <VenueCard key={item.id} info={item} isFree={true} />;
+                })}
+              </Box>
+            </Box>
+          </>
+        )}
       </Wrapper>
     </ThemeProvider>
   );

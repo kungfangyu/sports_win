@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 16:33:34
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-07 22:52:19
+ * @LastEditTime: 2024-09-08 00:47:05
  * @FilePath: /sports_win/src/page/HomePage.js
  */
 /*
@@ -22,19 +22,19 @@ import { theme } from "../style/theme";
 const sportsType = [
   {
     name: "籃球",
-    icon: "",
+    path: "basketball",
   },
   {
     name: "羽球",
-    icon: "",
+    path: "badminton",
   },
   {
     name: "桌球",
-    icon: "",
+    path: "tabletennis",
   },
   {
     name: "排球",
-    icon: "",
+    path: "volleyball",
   },
 ];
 const HomePage = () => {
@@ -44,7 +44,7 @@ const HomePage = () => {
         <Grid container spacing={2}>
           {sportsType.map((item) => (
             <Grid item xs={6} key={item.name}>
-              <Link>
+              <Link href={`/${item.path}`}>
                 <BaseCard sx={{ textAlign: "center", height: "76px" }}>
                   <Box
                     sx={{
