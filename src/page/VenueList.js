@@ -2,11 +2,9 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 16:27:55
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 01:31:22
+ * @LastEditTime: 2024-09-08 01:41:49
  * @FilePath: /sports_win/src/page/VenueList.js
  */
-import dayjs from "dayjs";
-
 import {
   Box,
   FormControl,
@@ -21,7 +19,9 @@ import Tabs from "@mui/material/Tabs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import React, { useState } from "react";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import ColorButton from "../components/button/ColorButton";
 import { Wrapper } from "../components/utility/LayoutStyle";
 import VenueCard from "../components/venueList/VenueCard";
@@ -32,6 +32,8 @@ import { BaseSelect } from "../components/utility/SelectStyle";
 import { taipeiDistricts, timeSlots } from "../data/data";
 
 const VenueList = () => {
+  const { sport } = useParams();
+
   const [value, setValue] = useState(1);
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
@@ -53,6 +55,18 @@ const VenueList = () => {
   const handleSiteTypeChange = (event) => {
     setSelectedSiteType(event.target.value);
   };
+
+  useEffect(() => {
+    if (sport === "basketball") {
+      // 加载篮球场地数据
+    } else if (sport === "badminton") {
+      // 加载羽毛球场地数据
+    } else if (sport === "tabletennis") {
+      // 加载乒乓球场地数据
+    } else if (sport === "volleyball") {
+      // 加载排球场地数据
+    }
+  });
 
   return (
     <ThemeProvider theme={theme}>
