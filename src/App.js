@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+/*
+ * @Author: Fangyu Kung
+ * @Date: 2024-09-07 13:16:07
+ * @LastEditors: Do not edit
+ * @LastEditTime: 2024-09-07 16:38:09
+ * @FilePath: /sports_win/src/App.js
+ */
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import HomePage from "./page/HomePage";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route exact path="/" element={<HomePage />} />
+        {/* <Route exact path="/librarylist" element={<LibraryList />} />
+        {/* <Route exact path="librarydetail/:id" element={<LibraryDetail />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
