@@ -32,7 +32,7 @@ const VenueCard = ({ info, isFree }) => {
           sx={{
             borderRadius: "8px",
             overflow: "hidden",
-            margin: "16px 16px 0",
+            margin: "0px 16px ",
           }}
         >
           <CardMedia
@@ -40,7 +40,7 @@ const VenueCard = ({ info, isFree }) => {
               width: "100%",
             }}
             component="img"
-            image="/images/sport.webp"
+            image="/images/sport.jpg"
             alt={name}
           />
         </Box>
