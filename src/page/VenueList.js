@@ -2,11 +2,12 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 16:27:55
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 07:16:49
+ * @LastEditTime: 2024-09-08 08:20:27
  * @FilePath: /sports_win/src/page/VenueList.js
  */
 import {
   Box,
+  CircularProgress,
   FormControl,
   Grid,
   InputLabel,
@@ -34,17 +35,12 @@ const VenueList = () => {
 
   const [value, setValue] = useState(1);
   const [searchTrigger, setSearchTrigger] = useState(0);
-
-  const [selectedValue, setSelectedValue] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [dateValue, setDateValue] = useState(dayjs().format("YYYY/MM/DD"));
 
   const [venueList, setVenueList] = useState([]);
-
-  const handleSelectChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDistrictChange = (event) => {
     setSelectedDistrict(event.target.value);
@@ -64,6 +60,7 @@ const VenueList = () => {
   };
 
   const fetchVenueList = async () => {
+    setIsLoading(true);
     try {
       const params = {
         category: sport,
@@ -78,35 +75,15 @@ const VenueList = () => {
       const response = await getVenueList(params);
       setVenueList(response.data);
     } catch (error) {
-      console.error("Fail:", error);
+      console.error("获取失败:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchVenueList();
   }, []);
-
-  // useEffect(() => {
-  //   const fetchVenueList = async () => {
-  //     try {
-  //       const params = {
-  //         category: sport,
-  //         pay: value,
-  //         district: selectedDistrict,
-  //         date: dateValue,
-  //         period: selectedTime,
-  //       };
-
-  //       const response = await getVenueList(params);
-  //       console.log(response.data);
-  //       setVenueList(response.data);
-  //     } catch (error) {
-  //       console.error("Fail:", error);
-  //     }
-  //   };
-
-  //   fetchVenueList();
-  // }, [sport, value, selectedDistrict, dateValue, selectedTime, searchTrigger]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -236,8 +213,8 @@ const VenueList = () => {
                   onChange={handleDistrictChange}
                 >
                   <MenuItem value="All">全部</MenuItem>
-                  {taipeiDistricts.map((district) => (
-                    <MenuItem key={district} value={district}>
+                  {taipeiDistricts.map((district, index) => (
+                    <MenuItem key={index} value={district}>
                       {district}
                     </MenuItem>
                   ))}
@@ -247,12 +224,31 @@ const VenueList = () => {
                 查詢
               </ColorButton>
               <Box>
-                {venueList.map((item) => {
-                  return <VenueCard key={item.id} info={item} isFree={true} />;
-                })}
+                {venueList.length !== 0 ? (
+                  venueList.map((item) => {
+                    return (
+                      <VenueCard key={item.id} info={item} isFree={true} />
+                    );
+                  })
+                ) : (
+                  <image src="/images/nodata.webp"></image>
+                )}
               </Box>
             </Box>
           </>
+        )}
+        {isLoading ? (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Box>
+            {venueList.map((item) => {
+              return (
+                <VenueCard key={item.id} info={item} isFree={value === 0} />
+              );
+            })}
+          </Box>
         )}
       </Wrapper>
     </ThemeProvider>
