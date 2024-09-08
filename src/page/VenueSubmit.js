@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-08 01:43:21
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 14:34:58
+ * @LastEditTime: 2024-09-08 14:45:37
  * @FilePath: /sports_win/src/page/VenueSubmit.js
  */
 import { ThemeProvider } from "@mui/material/styles";
@@ -91,7 +91,7 @@ const VenueSubmit = () => {
   const handleBooking = async (id) => {
     const bookingData = {
       userId: "1",
-      courtId: id,
+      courtId: transId,
       date: "2024/09/09",
       period: "09:00-10:00",
     };
@@ -107,7 +107,7 @@ const VenueSubmit = () => {
         navigate(`/${sport}`);
       }, 2000); // 2秒后跳转
     } catch (error) {
-      setOpenSnackbar(false);
+      // setOpenSnackbar(false);
       console.error("fetchVenueInfo failed:", error);
     } finally {
       setIsLoading(false);
