@@ -2,12 +2,13 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-08 03:37:10
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 03:45:12
+ * @LastEditTime: 2024-09-08 08:57:46
  * @FilePath: /sports_win/src/components/venueInfo/BasicInfo.js
  */
 import { Box, Link, Typography } from "@mui/material";
 
 const BasicInfo = ({ venueInfo }) => {
+  console.log(venueInfo);
   return (
     <div>
       <Box my={2}>

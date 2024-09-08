@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 22:51:09
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 08:43:58
+ * @LastEditTime: 2024-09-08 08:49:09
  * @FilePath: /sports_win/src/page/VenueDetail.js
  */
 import {
@@ -98,7 +98,6 @@ const VenueDetail = () => {
     affiliated_property,
     opening_closure_notice,
     parking_type,
-    affiliated_agency,
   } = venueInfo;
 
   return (

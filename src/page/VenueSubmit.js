@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-08 01:43:21
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 08:45:44
+ * @LastEditTime: 2024-09-08 08:58:54
  * @FilePath: /sports_win/src/page/VenueSubmit.js
  */
 import { ThemeProvider } from "@mui/material/styles";
@@ -72,12 +72,13 @@ const VenueSubmit = () => {
     const fetchVenueInfo = async () => {
       try {
         const { data } = await getVenueInfo(id);
-        const { name, address, manager_phone, price } = data;
+        const { name, address, manager_phone, price, official_website } = data;
         setVenueInfo({
           name,
           address,
           manager_phone,
           price,
+          official_website,
         });
       } catch (error) {
         console.error("fetchVenueInfo failed:", error);
