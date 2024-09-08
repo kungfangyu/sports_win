@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-08 01:43:21
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 08:58:54
+ * @LastEditTime: 2024-09-08 14:34:58
  * @FilePath: /sports_win/src/page/VenueSubmit.js
  */
 import { ThemeProvider } from "@mui/material/styles";
@@ -35,9 +35,10 @@ const ColoredCircularProgress = styled(CircularProgress)(({ theme }) => ({
 }));
 
 const VenueSubmit = () => {
-  const bookNumber = 0;
   const { sport, id } = useParams();
   const navigate = useNavigate();
+
+  const transId = Number(id);
   const [venueInfo, setVenueInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -87,10 +88,10 @@ const VenueSubmit = () => {
     fetchVenueInfo();
   }, [id]);
 
-  const handleBooking = async () => {
+  const handleBooking = async (id) => {
     const bookingData = {
       userId: "1",
-      courtId: 16,
+      courtId: id,
       date: "2024/09/09",
       period: "09:00-10:00",
     };
@@ -106,6 +107,7 @@ const VenueSubmit = () => {
         navigate(`/${sport}`);
       }, 2000); // 2秒后跳转
     } catch (error) {
+      setOpenSnackbar(false);
       console.error("fetchVenueInfo failed:", error);
     } finally {
       setIsLoading(false);
@@ -126,6 +128,7 @@ const VenueSubmit = () => {
       </Box>
     );
   }
+  console.log(id);
 
   return (
     <ThemeProvider theme={theme}>
@@ -213,7 +216,7 @@ const VenueSubmit = () => {
             </Typography>
           </InfoCardMain>
         </Box>
-        {bookNumber <= 1 ? (
+        {transId === 64 ? (
           <InfoCardMain sx={{ margin: "16px 0px" }}>
             <Box
               sx={{
@@ -268,11 +271,31 @@ const VenueSubmit = () => {
                 variant="h3SemiBold"
                 sx={{
                   color: "secondary.main",
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
                 球友募集中
+                {/* <span
+                  backgroundColor="secondary.main"
+                  color="white"
+                  padding="8px, 4px"
+                >
+                  2/4
+                </span> */}
               </Typography>
-              <Checkbox />
+              <Typography
+                sx={{
+                  backgroundColor: "secondary.main",
+                  color: "#fff",
+                  width: "50px",
+                  fontWeight: 500,
+                  textAlign: "center",
+                  borderRadius: "24px",
+                }}
+              >
+                2/4
+              </Typography>
             </Box>
             <Box
               sx={{
@@ -320,7 +343,7 @@ const VenueSubmit = () => {
               color: "primary.main",
             }}
           >
-            500元
+            {venueInfo.price}元
           </Typography>
         </Box>
         <Box
@@ -340,7 +363,7 @@ const VenueSubmit = () => {
             fullWidth
             sx={{
               backgroundColor:
-                bookNumber >= 1 ? "secondary.main" : "primary.main",
+                transId === 64 ? "primary.main" : "secondary.main",
               color: "white !important",
               borderRadius: "8px",
               padding: "12px",
@@ -350,7 +373,7 @@ const VenueSubmit = () => {
               handleBooking();
             }}
           >
-            {bookNumber >= 1 ? "我要報團" : "預定場地"}
+            {transId === 64 ? "預定場地" : "我要報團"}
           </Button>
         </Box>
 

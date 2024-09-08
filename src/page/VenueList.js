@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 16:27:55
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 08:20:27
+ * @LastEditTime: 2024-09-08 14:26:48
  * @FilePath: /sports_win/src/page/VenueList.js
  */
 import {
@@ -36,7 +36,7 @@ const VenueList = () => {
   const [value, setValue] = useState(1);
   const [searchTrigger, setSearchTrigger] = useState(0);
   const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState("09:00-10:00");
   const [dateValue, setDateValue] = useState(dayjs().format("YYYY/MM/DD"));
 
   const [venueList, setVenueList] = useState([]);
@@ -193,11 +193,11 @@ const VenueList = () => {
             <ColorButton mt={2} onClick={handleSearch}>
               查詢
             </ColorButton>
-            <Box>
-              {venueList.map((item) => {
-                return <VenueCard key={item.id} info={item} isFree={false} />;
+            {/* <Box>
+              {venueList.map((item, index) => {
+                return <VenueCard key={index} info={item} isFree={false} />;
               })}
-            </Box>
+            </Box> */}
           </>
         ) : (
           <>
@@ -223,7 +223,7 @@ const VenueList = () => {
               <ColorButton mt={2} onClick={handleSearch}>
                 查詢
               </ColorButton>
-              <Box>
+              {/* <Box>
                 {venueList.length !== 0 ? (
                   venueList.map((item) => {
                     return (
@@ -233,7 +233,7 @@ const VenueList = () => {
                 ) : (
                   <image src="/images/nodata.webp"></image>
                 )}
-              </Box>
+              </Box> */}
             </Box>
           </>
         )}
