@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-08 01:43:21
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 07:52:15
+ * @LastEditTime: 2024-09-08 08:45:44
  * @FilePath: /sports_win/src/page/VenueSubmit.js
  */
 import { ThemeProvider } from "@mui/material/styles";
@@ -25,11 +25,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { useNavigate, useParams } from "react-router-dom";
 import { postBooking } from "../api/postBooking";
-import {
-  InfoCardMain,
-  InfoCardNormalLarge,
-  InfoCardSecondary,
-} from "../components/card/InfoCard";
+import { InfoCardMain, InfoCardSecondary } from "../components/card/InfoCard";
 import BasicInfo from "../components/venueInfo/BasicInfo";
 import { images } from "../data/data";
 import { theme } from "../style/theme";
@@ -136,7 +132,7 @@ const VenueSubmit = () => {
         <BasicInfo venueInfo={venueInfo} />
         <Divider />
         <Box py={2}>
-          <InfoCardNormalLarge>
+          {/* <InfoCardNormalLarge>
             <Box
               sx={{
                 display: "flex",
@@ -158,7 +154,7 @@ const VenueSubmit = () => {
                 請選擇您的身份來預約運動場
               </Typography>
             </Box>
-          </InfoCardNormalLarge>
+          </InfoCardNormalLarge> */}
           <CardMedia
             sx={{
               width: "100%",

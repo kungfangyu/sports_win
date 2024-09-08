@@ -2,7 +2,7 @@
  * @Author: Fangyu Kung
  * @Date: 2024-09-07 22:51:09
  * @LastEditors: Do not edit
- * @LastEditTime: 2024-09-08 07:37:36
+ * @LastEditTime: 2024-09-08 08:43:58
  * @FilePath: /sports_win/src/page/VenueDetail.js
  */
 import {
@@ -203,13 +203,13 @@ const VenueDetail = () => {
         </Box>
         <ToggleCard
           title="運動場館介紹"
-          subtitle={affiliated_agency}
+          subtitle="場館隸屬機關屬性"
           content={venue_description}
           subcontent={affiliated_property}
         />
         <Box
           sx={{
-            position: "fixed",
+            position: "absolute",
             bottom: 0,
             left: 0,
             right: 0,
